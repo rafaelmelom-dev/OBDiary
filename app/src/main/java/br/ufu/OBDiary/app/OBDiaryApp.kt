@@ -3,6 +3,7 @@ package br.ufu.OBDiary.app
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -21,13 +22,39 @@ import br.ufu.OBDiary.feature.history.HistoryScreen
 import br.ufu.OBDiary.feature.home.HomeScreen
 import br.ufu.OBDiary.feature.obd.ObdSimulatorScreen
 import br.ufu.OBDiary.feature.vehicle.VehicleScreen
+import br.ufu.OBDiary.ui.theme.OBDiaryTheme
+
+//app/src/main/java/br/ufu/OBDiary/
+//├── MainActivity.kt
+//├── app/
+//│   ├── OBDiaryApp.kt          # Scaffold externo + NavDisplay
+//│   └── AppScaffold.kt         # bottom bar + composição de conteúdo
+//├── core/
+//│   ├── database/
+//│   │   ├── OBDiaryDataSource.kt
+//│   │   ├── entity/  (VehicleEntity, RefuelingEntity, RepairEntity, ConsumptionReadingEntity)
+//│   │   ├── dao/     (VehicleDao, RefuelingDao, RepairDao, ConsumptionDao)
+//│   │   └── converter/Converters.kt
+//│   ├── repository/  (VehicleRepository, RefuelingRepository, RepairRepository, ConsumptionRepository)
+//│   ├── datastore/ActiveVehicleStore.kt   # guarda vehicleIdAtivo
+//│   └── di/AppContainer.kt
+//└── feature/
+//├── home/        (HomeDestination, HomeScreen, HomeViewModel, HomeUiState)
+//├── history/
+//│   ├── HistoryScreen.kt        # 1 tela com SegmentedButton
+//│   ├── ListViewModel.kt
+//│   ├── RefuelingFormViewModel.kt
+//│   └── RepairFormViewModel.kt
+//├── obd/         (ObdSimulatorScreen, ObdSimulatorViewModel)
+//├── consumption/ (ConsumptionScreen, ConsumptionViewModel)
+//└── vehicle/     (VehicleScreen, VehicleViewModel)
 
 sealed class Destination(val title: String) {
     object Home : Destination("OBDiary")
-    object History : Destination("Histórico")
-    object Obd : Destination("OBD Simulador")
-    object Consumption : Destination("Consumo")
-    object Vehicles : Destination("Meus veículos")
+    object History : Destination("History")
+    object Obd : Destination("OBD Simulator")
+    object Consumption : Destination("Consumption")
+    object Vehicles : Destination("My vehicles")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,14 +62,16 @@ sealed class Destination(val title: String) {
 fun OBDiaryApp() {
     val backStack = rememberSaveable { mutableStateListOf<Destination>(Destination.Home) }
 
-    Scaffold(topBar = { OBDiaryTopBar(backStack.last()) }, bottomBar = {
-        OBDiaryBottomBar(backStack.last(), onTabSelected = { destination ->
-            if (backStack.last() != destination) {
-                backStack.removeLastOrNull()
-                backStack.add(destination)
-            }
-        })
-    }) { innerPadding ->
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = { OBDiaryTopBar(backStack.last()) }, bottomBar = {
+            OBDiaryBottomBar(backStack.last(), onTabSelected = { destination ->
+                if (backStack.last() != destination) {
+                    backStack.removeLastOrNull()
+                    backStack.add(destination)
+                }
+            })
+        }) { innerPadding ->
         NavDisplay(
             backStack = backStack,
             onBack = { backStack.removeLastOrNull() },
@@ -50,7 +79,7 @@ fun OBDiaryApp() {
         ) { destination ->
             when (destination) {
                 is Destination.Home -> NavEntry<Destination>(destination) {
-                    HomeScreen(modifier = Modifier.padding())
+                    HomeScreen()
                 }
 
                 is Destination.History -> NavEntry<Destination>(destination) {
