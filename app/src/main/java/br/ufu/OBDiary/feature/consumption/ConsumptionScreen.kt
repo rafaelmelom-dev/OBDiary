@@ -130,7 +130,7 @@ fun RefuelItem(consumption: ConsumptionEntry) {
                 color = Color.Black
             )
             Text(
-                text = "Abastecimento #${consumption.refuelNumber}",
+                text = "Refuel #${consumption.refuelNumber}",
                 fontSize = 14.sp,
                 color = Color.Gray
             )

@@ -1,6 +1,7 @@
 package br.ufu.OBDiary.feature.consumption
 
 import android.content.ClipDescription
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -47,6 +48,7 @@ class ConsumptionViewModel(
             ) { list, activeId ->
                 val refuels =
                     list.find { it.vehicle.id == activeId }?.refuels?.sortedByDescending { it.date }
+                        ?.sortedByDescending { it.hodometer }
                         ?: emptyList()
 
                 var consumptions = refuels.zipWithNext { first, second ->
