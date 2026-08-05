@@ -57,13 +57,13 @@ interface VehicleDao {
     fun getAllVehiclesWithRefuelsAndRepairs(): Flow<List<VehicleWithRefuelsAndRepairs>>
 
     @Insert
-    fun insert(vehicle: VehicleEntity)
+    suspend fun insert(vehicle: VehicleEntity)
 
     @Update
-    fun update(vehicle: VehicleEntity)
+    suspend fun update(vehicle: VehicleEntity)
 
     @Query("DELETE FROM vehicle WHERE id = :id")
-    fun deleteById(id: Int)
+    suspend fun deleteById(id: Int)
 }
 
 @Serializable
@@ -101,13 +101,13 @@ interface RefuelingDao {
     fun getAllRefuels(): Flow<List<RefuelingEntity>>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insert(refuel: RefuelingEntity)
+    suspend fun insert(refuel: RefuelingEntity)
 
     @Update
-    fun update(refuel: RefuelingEntity)
+    suspend fun update(refuel: RefuelingEntity)
 
     @Query("DELETE FROM refuel WHERE id = :id")
-    fun deleteById(id: Int)
+    suspend fun deleteById(id: Int)
 }
 
 @Serializable
@@ -128,7 +128,8 @@ data class RefuelingEntity(
     val id_vehicle: Int,
     val date: Date,
     val hodometer: Int,
-    val liters: Int,
+    val liters: Double,
+    val value_by_liter: Double,
     val fuel_type: String,
     val gas_station: String
 )
@@ -139,13 +140,13 @@ interface RepairDao {
     fun getAllRepairs(): Flow<List<RepairEntity>>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insert(repair: RepairEntity)
+    suspend fun insert(repair: RepairEntity)
 
     @Update
-    fun update(repair: RepairEntity)
+    suspend fun update(repair: RepairEntity)
 
     @Query("DELETE FROM repair WHERE id = :id")
-    fun deleteById(id: Int)
+    suspend fun deleteById(id: Int)
 }
 
 @Serializable

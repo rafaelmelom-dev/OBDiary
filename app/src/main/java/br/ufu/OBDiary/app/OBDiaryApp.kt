@@ -1,11 +1,16 @@
 package br.ufu.OBDiary.app
 
+import android.content.Context
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -14,15 +19,19 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import br.ufu.OBDiary.R
 import br.ufu.OBDiary.feature.consumption.ConsumptionScreen
 import br.ufu.OBDiary.feature.history.HistoryScreen
+import br.ufu.OBDiary.feature.history.NewRefuelScreen
+import br.ufu.OBDiary.feature.history.NewRepairScreen
 import br.ufu.OBDiary.feature.home.HomeScreen
 import br.ufu.OBDiary.feature.obd.ObdSimulatorScreen
+import br.ufu.OBDiary.feature.vehicle.NewVehicleScreen
 import br.ufu.OBDiary.feature.vehicle.VehicleScreen
-import br.ufu.OBDiary.ui.theme.OBDiaryTheme
+import kotlinx.serialization.Serializable
 
 //app/src/main/java/br/ufu/OBDiary/
 //├── MainActivity.kt
@@ -55,19 +64,23 @@ sealed class Destination(val title: String) {
     object Obd : Destination("OBD Simulator")
     object Consumption : Destination("Consumption")
     object Vehicles : Destination("My vehicles")
+    object NewVehicle : Destination("New vehicle")
+    object NewRefuel : Destination("New Refuel")
+    object NewRepair : Destination("New Repair")
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OBDiaryApp() {
+fun OBDiaryApp(context: Context) {
     val backStack = rememberSaveable { mutableStateListOf<Destination>(Destination.Home) }
+    val appContainer = AppContainer(context)
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
-        topBar = { OBDiaryTopBar(backStack.last()) }, bottomBar = {
+        topBar = { OBDiaryTopBar(backStack.last(), onBack = { backStack.removeLastOrNull() }) },
+        bottomBar = {
             OBDiaryBottomBar(backStack.last(), onTabSelected = { destination ->
                 if (backStack.last() != destination) {
-                    backStack.removeLastOrNull()
+                    backStack.clear()
                     backStack.add(destination)
                 }
             })
@@ -83,7 +96,10 @@ fun OBDiaryApp() {
                 }
 
                 is Destination.History -> NavEntry<Destination>(destination) {
-                    HistoryScreen()
+                    HistoryScreen(
+                        vehicleViewModel = appContainer.vehicleViewModel,
+                        historyViewModel = appContainer.historyViewModel,
+                        onAddClick = { destination -> backStack.add(destination) })
                 }
 
                 is Destination.Obd -> NavEntry<Destination>(destination) {
@@ -95,7 +111,23 @@ fun OBDiaryApp() {
                 }
 
                 is Destination.Vehicles -> NavEntry<Destination>(destination) {
-                    VehicleScreen()
+                    VehicleScreen(
+                        vehicleViewModel = appContainer.vehicleViewModel,
+                        onAddVehicle = { backStack.add(Destination.NewVehicle) })
+                }
+
+                is Destination.NewVehicle -> NavEntry<Destination>(destination) {
+                    NewVehicleScreen(
+                        vehicleViewModel = appContainer.vehicleViewModel,
+                        onBack = { backStack.removeLastOrNull() })
+                }
+
+                is Destination.NewRefuel -> NavEntry<Destination>(destination) {
+                    NewRefuelScreen(historyViewModel = appContainer.historyViewModel, onBack = { backStack.removeLastOrNull() })
+                }
+
+                is Destination.NewRepair -> NavEntry<Destination>(destination) {
+                    NewRepairScreen(historyViewModel = appContainer.historyViewModel, onBack = { backStack.removeLastOrNull() })
                 }
             }
         }
@@ -104,7 +136,18 @@ fun OBDiaryApp() {
 
 @Composable
 fun OBDiaryBottomBar(currentDestination: Destination, onTabSelected: (Destination) -> Unit) {
-    NavigationBar() {
+    val itemColors = NavigationBarItemDefaults.colors(
+        selectedIconColor = MaterialTheme.colorScheme.primary,        // azul (LightPrimary)
+        selectedTextColor = MaterialTheme.colorScheme.primary,        // azul
+        indicatorColor = MaterialTheme.colorScheme.primaryContainer,// azul claro (LightPrimaryContainer)
+        unselectedIconColor = MaterialTheme.colorScheme.secondary,      // cinza (LightSecondary)
+        unselectedTextColor = MaterialTheme.colorScheme.secondary       // cinza
+    )
+
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface
+    ) {
         NavigationBarItem(
             selected = currentDestination is Destination.Home,
             onClick = { onTabSelected(Destination.Home) },
@@ -116,7 +159,9 @@ fun OBDiaryBottomBar(currentDestination: Destination, onTabSelected: (Destinatio
             },
             label = {
                 Text("Home")
-            })
+            },
+            colors = itemColors
+        )
         NavigationBarItem(
             selected = currentDestination is Destination.History,
             onClick = { onTabSelected(Destination.History) },
@@ -128,7 +173,9 @@ fun OBDiaryBottomBar(currentDestination: Destination, onTabSelected: (Destinatio
             },
             label = {
                 Text("History")
-            })
+            },
+            colors = itemColors
+        )
         NavigationBarItem(
             selected = currentDestination is Destination.Obd,
             onClick = { onTabSelected(Destination.Obd) },
@@ -140,7 +187,9 @@ fun OBDiaryBottomBar(currentDestination: Destination, onTabSelected: (Destinatio
             },
             label = {
                 Text("OBD")
-            })
+            },
+            colors = itemColors
+        )
         NavigationBarItem(
             selected = currentDestination is Destination.Consumption,
             onClick = { onTabSelected(Destination.Consumption) },
@@ -152,7 +201,9 @@ fun OBDiaryBottomBar(currentDestination: Destination, onTabSelected: (Destinatio
             },
             label = {
                 Text("Consumption")
-            })
+            },
+            colors = itemColors
+        )
         NavigationBarItem(
             selected = currentDestination is Destination.Vehicles,
             onClick = { onTabSelected(Destination.Vehicles) },
@@ -164,14 +215,29 @@ fun OBDiaryBottomBar(currentDestination: Destination, onTabSelected: (Destinatio
             },
             label = {
                 Text("Vehicles")
-            })
+            },
+            colors = itemColors
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OBDiaryTopBar(currentDestination: Destination) {
+fun OBDiaryTopBar(currentDestination: Destination, onBack: () -> Unit) {
     TopAppBar(
-        title = { Text(text = currentDestination.title) }
+        title = {
+            if (currentDestination is Destination.NewVehicle || currentDestination is Destination.NewRefuel || currentDestination is Destination.NewRepair) {
+                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Icon(
+                        painter = painterResource(R.drawable.keyboard_backspace_24px),
+                        contentDescription = "Back",
+                        modifier = Modifier.clickable { onBack() }
+                    )
+                    Text(text = currentDestination.title)
+                }
+            } else {
+                Text(text = currentDestination.title)
+            }
+        }
     )
 }
