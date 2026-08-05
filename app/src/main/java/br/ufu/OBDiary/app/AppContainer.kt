@@ -5,7 +5,9 @@ import androidx.room.Room
 import br.ufu.OBDiary.core.datasource.OBDiaryDatabase
 import br.ufu.OBDiary.core.datasource.OBDiaryRepository
 import br.ufu.OBDiary.core.datasource.VehiclePreferences
+import br.ufu.OBDiary.feature.consumption.ConsumptionViewModel
 import br.ufu.OBDiary.feature.history.HistoryViewModel
+import br.ufu.OBDiary.feature.home.HomeViewModel
 import br.ufu.OBDiary.feature.vehicle.VehicleViewModel
 
 class AppContainer(private val context: Context) {
@@ -25,4 +27,6 @@ class AppContainer(private val context: Context) {
     // viewmodels
     val vehicleViewModel = VehicleViewModel(obdiaryRepository, vehiclePreferences)
     val historyViewModel = HistoryViewModel(obdiaryRepository, vehiclePreferences)
+    val homeViewModel = HomeViewModel(obdiaryRepository, vehiclePreferences)
+    val consumptionViewModel = ConsumptionViewModel(obdiaryRepository, vehiclePreferences)
 }

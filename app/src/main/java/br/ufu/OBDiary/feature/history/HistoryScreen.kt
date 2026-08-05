@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -42,8 +43,10 @@ import br.ufu.OBDiary.core.datasource.RefuelingEntity
 import br.ufu.OBDiary.core.datasource.RepairEntity
 import br.ufu.OBDiary.feature.vehicle.VehicleViewModel
 import br.ufu.OBDiary.ui.theme.CarBlue
+import br.ufu.OBDiary.ui.theme.MainBlue
 import br.ufu.OBDiary.ui.theme.MediumGray
 import java.text.SimpleDateFormat
+import java.time.ZoneId
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
@@ -51,7 +54,7 @@ import java.util.TimeZone
 fun parseDateString(dateString: String): Date? {
     return try {
         val sdf = SimpleDateFormat("dd / MM / yyyy", Locale.getDefault())
-        sdf.timeZone = TimeZone.getTimeZone("UTC")
+        sdf.timeZone = TimeZone.getTimeZone(ZoneId.systemDefault())
         sdf.parse(dateString)
     } catch (e: Exception) {
         null
@@ -60,81 +63,15 @@ fun parseDateString(dateString: String): Date? {
 
 @Composable
 fun HistoryScreen(
-    vehicleViewModel: VehicleViewModel,
     historyViewModel: HistoryViewModel,
     onAddClick: (Destination) -> Unit
 ) {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val uiState = vehicleViewModel.uiState.collectAsStateWithLifecycle()
-
-    val mockRefuels = remember {
-        listOf(
-            RefuelingEntity(
-                id_vehicle = 1,
-                date = Date(),
-                hodometer = 48230,
-                liters = 42.5,
-                value_by_liter = 5.89,
-                fuel_type = "Gasolina",
-                gas_station = "Posto Shell Centro"
-            ),
-            RefuelingEntity(
-                id_vehicle = 1,
-                date = Date(),
-                hodometer = 48000,
-                liters = 35.2,
-                value_by_liter = 4.72,
-                fuel_type = "Etanol",
-                gas_station = "Posto Petrobras"
-            ),
-            RefuelingEntity(
-                id_vehicle = 1,
-                date = Date(),
-                hodometer = 47500,
-                liters = 60.1,
-                value_by_liter = 5.63,
-                fuel_type = "Diesel",
-                gas_station = "Posto Ipiranga"
-            )
-        )
-    }
-
-    val mockRepairs = remember {
-        listOf(
-            RepairEntity(
-                id_vehicle = 1,
-                date = Date(),
-                type = "Troca de Óleo",
-                description = "Troca de óleo do motor e filtro",
-                category = "Manutenção",
-                workshop = "Oficina do Zé",
-                value = 250.0
-            ),
-            RepairEntity(
-                id_vehicle = 1,
-                date = Date(),
-                type = "Alinhamento e Balanceamento",
-                description = "Alinhamento das quatro rodas",
-                category = "Manutenção",
-                workshop = "Centro Automotivo",
-                value = 120.0
-            ),
-            RepairEntity(
-                id_vehicle = 1,
-                date = Date(),
-                type = "Troca de Pastilhas",
-                description = "Troca de pastilhas de freio dianteiras",
-                category = "Segurança",
-                workshop = "Oficina do Zé",
-                value = 350.0
-            )
-        )
-    }
+    val uiState = historyViewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                if (selectedTabIndex == 0) {
+                if (uiState.value.selectedTabIndex == 0) {
                     onAddClick(Destination.NewRefuel)
                 } else {
                     onAddClick(Destination.NewRepair)
@@ -148,10 +85,10 @@ fun HistoryScreen(
         }
     ) { innerPadding ->
         Column(modifier = Modifier.fillMaxSize()) {
-            SecondaryTabRow(selectedTabIndex = selectedTabIndex) {
+            SecondaryTabRow(selectedTabIndex = uiState.value.selectedTabIndex) {
                 Tab(
-                    selected = selectedTabIndex == 0,
-                    onClick = { selectedTabIndex = 0 },
+                    selected = uiState.value.selectedTabIndex == 0,
+                    onClick = { historyViewModel.setTabIndex(0) },
                     text = {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
@@ -165,8 +102,8 @@ fun HistoryScreen(
                     }
                 )
                 Tab(
-                    selected = selectedTabIndex == 1,
-                    onClick = { selectedTabIndex = 1 },
+                    selected = uiState.value.selectedTabIndex == 1,
+                    onClick = { historyViewModel.setTabIndex(1) },
                     text = {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
@@ -181,7 +118,7 @@ fun HistoryScreen(
                 )
             }
 
-            when (selectedTabIndex) {
+            when (uiState.value.selectedTabIndex) {
                 0 -> {
                     if (uiState.value.activeVehicleId == null) {
                         Box(
@@ -192,8 +129,7 @@ fun HistoryScreen(
                         }
                     } else {
                         RefuelHistoryList(
-                            uiState.value.list.find { it.vehicle.id == uiState.value.activeVehicleId ?: 0 }?.refuels
-                                ?: emptyList(),
+                            uiState.value.refuelsList,
                             { id -> historyViewModel.removeRefuelById(id) }
                         )
                     }
@@ -209,8 +145,7 @@ fun HistoryScreen(
                         }
                     } else {
                         RepairHistoryList(
-                            uiState.value.list.find { it.vehicle.id == uiState.value.activeVehicleId ?: 0 }?.repairs
-                                ?: emptyList(),
+                            uiState.value.repairsList,
                             { id -> historyViewModel.removeRepairById(id) }
                         )
                     }
@@ -261,6 +196,7 @@ fun RefuelHistoryList(refuels: List<RefuelingEntity>, onDelete: (Int) -> Unit) {
             items(refuels) { refuel ->
                 RefuelHistoryItem(refuel, { onDelete(refuel.id) })
             }
+            item { Spacer(Modifier.height(40.dp)) }
         }
     }
 }
@@ -283,7 +219,7 @@ fun RefuelHistoryItem(refuel: RefuelingEntity, onDelete: () -> Unit) {
             Icon(
                 painter = painterResource(id = R.drawable.local_gas_station_24px),
                 contentDescription = "Fuel Icon",
-                tint = Color.Black
+                tint = MainBlue
             )
         }
 
@@ -403,6 +339,7 @@ fun RepairHistoryList(repairs: List<RepairEntity>, onDelete: (Int) -> Unit) {
             items(repairs) { repair ->
                 RepairHistoryItem(repair, { onDelete(repair.id) })
             }
+            item { Spacer(Modifier.height(40.dp)) }
         }
     }
 }

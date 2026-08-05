@@ -43,6 +43,7 @@ import br.ufu.OBDiary.R
 import br.ufu.OBDiary.ui.theme.CarBlue
 import androidx.compose.material3.rememberDatePickerState
 import java.text.SimpleDateFormat
+import java.time.ZoneId
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
@@ -50,25 +51,32 @@ import java.util.TimeZone
 @Composable
 fun NewRepairScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
     val sdf = SimpleDateFormat("dd / MM / yyyy", Locale.getDefault())
-    sdf.timeZone = TimeZone.getTimeZone("UTC")
+    sdf.timeZone = TimeZone.getTimeZone(ZoneId.systemDefault())
     val today = sdf.format(Date())
 
     var date by remember { mutableStateOf(today) }
     var showDatePicker by remember { mutableStateOf(false) }
-    var type by remember { mutableStateOf("Troca de óleo") }
+    var type by remember { mutableStateOf("Oil change") }
     var description by remember { mutableStateOf("") }
-    var descriptionFieldError by remember { mutableStateOf(false) }
-    var category by remember { mutableStateOf("Preventiva") }
+    var category by remember { mutableStateOf("Preventive") }
     var workshop by remember { mutableStateOf("") }
     var workshopFieldError by remember { mutableStateOf(false) }
     var value by remember { mutableStateOf("") }
     var valueFieldError by remember { mutableStateOf(false) }
 
     val serviceTypes = listOf(
-        "Troca de óleo", "Alinhamento e balanceamento", "Pastilha de freio",
-        "Pneu", "Revisão geral", "Suspensão", "Motor", "Elétrica", "Ar-condicionado", "Outro"
+        "Oil change",
+        "Alignment and balancing",
+        "Brake pad",
+        "Tire",
+        "General inspection",
+        "Suspension",
+        "Engine",
+        "Electrical",
+        "Air conditioning",
+        "Other"
     )
-    val categories = listOf("Preventiva", "Corretiva", "Estética", "Outro")
+    val categories = listOf("Preventive", "Corrective", "Aesthetic", "Other")
 
     val datePickerState = rememberDatePickerState()
 
@@ -161,7 +169,6 @@ fun NewRepairScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
             value = description,
             onValueChange = { description = it },
             label = { Text("Description") },
-            isError = descriptionFieldError,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -216,8 +223,7 @@ fun NewRepairScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
         Button(
             onClick = {
                 val areFieldsFilled =
-                    description.isNotBlank() && workshop.isNotBlank() && value.isNotBlank()
-                descriptionFieldError = description.isBlank()
+                    workshop.isNotBlank() && value.isNotBlank()
                 workshopFieldError = workshop.isBlank()
                 valueFieldError = value.isBlank()
 
@@ -235,10 +241,8 @@ fun NewRepairScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .background(CarBlue, RoundedCornerShape(24.dp)),
-            shape = RoundedCornerShape(24.dp)
         ) {
-            Text("Save repair", color = Color.White)
+            Text("Save repair")
         }
     }
 }

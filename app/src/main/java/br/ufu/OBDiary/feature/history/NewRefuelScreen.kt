@@ -42,12 +42,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.ufu.OBDiary.R
 import br.ufu.OBDiary.ui.theme.CarBlue
+import java.time.ZoneId
 
 
 @Composable
 fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
     val sdf = SimpleDateFormat("dd / MM / yyyy", Locale.getDefault())
-    sdf.timeZone = TimeZone.getTimeZone("UTC")
+    sdf.timeZone = TimeZone.getTimeZone(ZoneId.systemDefault())
     val today = sdf.format(Date())
 
     var date by remember { mutableStateOf(today) }
@@ -58,7 +59,7 @@ fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
     var litersFieldError by remember { mutableStateOf(false) }
     var value_by_liter by remember { mutableStateOf("") }
     var valueByLiterFieldError by remember { mutableStateOf(false) }
-    var fuel_type by remember { mutableStateOf("Gasolina") }
+    var fuel_type by remember { mutableStateOf("Gasoline") }
     var gas_station by remember { mutableStateOf("") }
 
     val datePickerState = rememberDatePickerState()
@@ -219,10 +220,8 @@ fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .background(CarBlue, RoundedCornerShape(24.dp)),
-            shape = RoundedCornerShape(24.dp)
         ) {
-            Text("Save refuel", color = Color.White)
+            Text("Save refuel")
         }
     }
 }

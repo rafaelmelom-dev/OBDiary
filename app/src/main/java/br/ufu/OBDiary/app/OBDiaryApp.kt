@@ -92,12 +92,13 @@ fun OBDiaryApp(context: Context) {
         ) { destination ->
             when (destination) {
                 is Destination.Home -> NavEntry<Destination>(destination) {
-                    HomeScreen()
+                    HomeScreen(
+                        appContainer.homeViewModel,
+                        onAddRefuel = { backStack.add(Destination.NewRefuel) })
                 }
 
                 is Destination.History -> NavEntry<Destination>(destination) {
                     HistoryScreen(
-                        vehicleViewModel = appContainer.vehicleViewModel,
                         historyViewModel = appContainer.historyViewModel,
                         onAddClick = { destination -> backStack.add(destination) })
                 }
@@ -107,7 +108,7 @@ fun OBDiaryApp(context: Context) {
                 }
 
                 is Destination.Consumption -> NavEntry<Destination>(destination) {
-                    ConsumptionScreen()
+                    ConsumptionScreen(appContainer.consumptionViewModel)
                 }
 
                 is Destination.Vehicles -> NavEntry<Destination>(destination) {
@@ -123,11 +124,15 @@ fun OBDiaryApp(context: Context) {
                 }
 
                 is Destination.NewRefuel -> NavEntry<Destination>(destination) {
-                    NewRefuelScreen(historyViewModel = appContainer.historyViewModel, onBack = { backStack.removeLastOrNull() })
+                    NewRefuelScreen(
+                        historyViewModel = appContainer.historyViewModel,
+                        onBack = { backStack.removeLastOrNull() })
                 }
 
                 is Destination.NewRepair -> NavEntry<Destination>(destination) {
-                    NewRepairScreen(historyViewModel = appContainer.historyViewModel, onBack = { backStack.removeLastOrNull() })
+                    NewRepairScreen(
+                        historyViewModel = appContainer.historyViewModel,
+                        onBack = { backStack.removeLastOrNull() })
                 }
             }
         }

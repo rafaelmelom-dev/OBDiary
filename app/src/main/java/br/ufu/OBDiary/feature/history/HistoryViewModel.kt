@@ -21,7 +21,8 @@ import java.util.Date
 data class HistoryUiState(
     val refuelsList: List<RefuelingEntity> = listOf(),
     val repairsList: List<RepairEntity> = listOf(),
-    val activeVehicleId: Int? = null
+    val activeVehicleId: Int? = null,
+    val selectedTabIndex: Int = 0
 )
 
 class HistoryViewModel(
@@ -38,9 +39,10 @@ class HistoryViewModel(
                 vehiclePreferences.activeVehicleId
             ) { list, activeId ->
                 HistoryUiState(
-                    refuelsList = list.find { it.vehicle.id == activeId }?.refuels ?: emptyList(),
-                    repairsList = list.find { it.vehicle.id == activeId }?.repairs ?: emptyList(),
-                    activeVehicleId = activeId
+                    refuelsList = list.find { it.vehicle.id == activeId }?.refuels?.sortedByDescending { it.date } ?: emptyList(),
+                    repairsList = list.find { it.vehicle.id == activeId }?.repairs?.sortedByDescending { it.date } ?: emptyList(),
+                    activeVehicleId = activeId,
+                    selectedTabIndex = uiState.value.selectedTabIndex
                 )
             }.collect { newState ->
                 _uiState.update { newState }
@@ -103,6 +105,14 @@ class HistoryViewModel(
     fun removeRepairById(id: Int) {
         viewModelScope.launch {
             obdiaryRepository.deleteRepairById(id)
+        }
+    }
+
+    fun setTabIndex(id: Int) {
+        viewModelScope.launch {
+            _uiState.update {
+                _uiState.value.copy(selectedTabIndex = id)
+            }
         }
     }
 }
