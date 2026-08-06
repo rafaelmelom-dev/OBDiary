@@ -61,7 +61,7 @@ import kotlinx.serialization.Serializable
 sealed class Destination(val title: String) {
     object Home : Destination("OBDiary")
     object History : Destination("History")
-    object Obd : Destination("OBD Simulator")
+    object Obd : Destination("OBD Panel")
     object Consumption : Destination("Consumption")
     object Vehicles : Destination("My vehicles")
     object NewVehicle : Destination("New vehicle")
@@ -104,7 +104,9 @@ fun OBDiaryApp(context: Context) {
                 }
 
                 is Destination.Obd -> NavEntry<Destination>(destination) {
-                    ObdSimulatorScreen()
+                    ObdSimulatorScreen(
+                        obdSimulatorViewModel = appContainer.obdSimulatorViewModel
+                    )
                 }
 
                 is Destination.Consumption -> NavEntry<Destination>(destination) {

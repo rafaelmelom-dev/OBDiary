@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.room.runtime)
+    implementation("androidx.compose.material:material-icons-extended:1.7.0")
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     testImplementation(libs.junit)
@@ -58,4 +59,5 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+
 }
