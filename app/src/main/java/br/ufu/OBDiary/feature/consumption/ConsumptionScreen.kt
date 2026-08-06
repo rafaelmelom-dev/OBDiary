@@ -2,6 +2,7 @@ package br.ufu.OBDiary.feature.consumption
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,14 +42,14 @@ fun ConsumptionScreen(consumptionViewModel: ConsumptionViewModel) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 SummaryCard(
-                    label = "GENERAL AVG.",
+                    label = stringResource(R.string.general_avg),
                     value = String.format("%.1f", uiState.value.average ?: 0.0),
                     unit = "km/L",
                     backgroundColor = Color(0xFFD1E4FF), // Light blue
                     modifier = Modifier.weight(1f)
                 )
                 SummaryCard(
-                    label = "BEST AVG.",
+                    label = stringResource(R.string.best_avg),
                     value = String.format("%.1f", uiState.value.best ?: 0.0),
                     unit = "km/L",
                     backgroundColor = Color(0xFFF0F2F5), // Light gray
@@ -58,12 +60,20 @@ fun ConsumptionScreen(consumptionViewModel: ConsumptionViewModel) {
 
         item {
             Text(
-                text = "By refuel",
+                text = stringResource(R.string.by_refuel),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
+        }
+
+        if (uiState.value.consumptions.isEmpty()) {
+            item {
+                Row (horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(24.dp)) {
+                    Text(stringResource(R.string.no_consumptions_found))
+                }
+            }
         }
 
         items(uiState.value.consumptions) { consumption ->
@@ -130,7 +140,7 @@ fun RefuelItem(consumption: ConsumptionEntry) {
                 color = Color.Black
             )
             Text(
-                text = "Refuel #${consumption.refuelNumber}",
+                text = stringResource(R.string.refuel, consumption.refuelNumber),
                 fontSize = 14.sp,
                 color = Color.Gray
             )

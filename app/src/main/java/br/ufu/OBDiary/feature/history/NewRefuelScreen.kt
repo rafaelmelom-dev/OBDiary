@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -50,6 +51,7 @@ fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
     val sdf = SimpleDateFormat("dd / MM / yyyy", Locale.getDefault())
     sdf.timeZone = TimeZone.getTimeZone(ZoneId.systemDefault())
     val today = sdf.format(Date())
+    val fuel_type_resource = stringResource(R.string.gasoline)
 
     var date by remember { mutableStateOf(today) }
     var showDatePicker by remember { mutableStateOf(false) }
@@ -59,7 +61,7 @@ fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
     var litersFieldError by remember { mutableStateOf(false) }
     var value_by_liter by remember { mutableStateOf("") }
     var valueByLiterFieldError by remember { mutableStateOf(false) }
-    var fuel_type by remember { mutableStateOf("Gasoline") }
+    var fuel_type by remember { mutableStateOf(fuel_type_resource) }
     var gas_station by remember { mutableStateOf("") }
 
     val datePickerState = rememberDatePickerState()
@@ -71,16 +73,16 @@ fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
             Button(onClick = {
                 datePickerState.selectedDateMillis?.let { millis ->
                     val sdf = SimpleDateFormat("dd / MM / yyyy", Locale.getDefault())
-                    sdf.timeZone = TimeZone.getTimeZone("UTC")
+                    sdf.timeZone = TimeZone.getTimeZone(ZoneId.systemDefault())
                     date = sdf.format(Date(millis))
                 }
                 showDatePicker = false
             }) {
-                Text("OK")
+                Text(stringResource(R.string.ok))
             }
         }, dismissButton = {
             Button(onClick = { showDatePicker = false }) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }) {
             DatePicker(state = datePickerState)
@@ -99,7 +101,7 @@ fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
             OutlinedTextField(
                 value = date,
                 onValueChange = { },
-                label = { Text("Date") },
+                label = { Text(stringResource(R.string.date)) },
                 modifier = Modifier.fillMaxWidth(),
                 readOnly = true,
                 trailingIcon = {
@@ -117,7 +119,7 @@ fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
         OutlinedTextField(
             value = hodometer,
             onValueChange = { hodometer = it },
-            label = { Text("Hodometer (km)") },
+            label = { Text(stringResource(R.string.hodometer_km)) },
             isError = hodometerFieldError,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
@@ -126,7 +128,7 @@ fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
         OutlinedTextField(
             value = liters,
             onValueChange = { liters = it },
-            label = { Text("Liters refueled") },
+            label = { Text(stringResource(R.string.liters_refueled)) },
             isError = litersFieldError,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth()
@@ -135,7 +137,7 @@ fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
         OutlinedTextField(
             value = value_by_liter,
             onValueChange = { value_by_liter = it },
-            label = { Text("Value by liter (R$)") },
+            label = { Text(stringResource(R.string.value_by_liter_r)) },
             isError = valueByLiterFieldError,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth()
@@ -152,7 +154,7 @@ fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Total value", fontWeight = FontWeight.Medium)
+                Text(text = stringResource(R.string.total_value), fontWeight = FontWeight.Medium)
                 Text(
                     text = "R$ ${String.format("%.2f", totalValue)}",
                     fontWeight = FontWeight.Bold,
@@ -162,7 +164,7 @@ fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
         }
 
         Text(
-            text = "Fuel",
+            text = stringResource(R.string.fuel),
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.padding(top = 8.dp)
         )
@@ -170,7 +172,9 @@ fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
         Row(
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            listOf("Gasoline", "Ethanol", "Diesel").forEach { type ->
+            listOf(stringResource(R.string.gasoline),
+                stringResource(R.string.ethanol), stringResource(R.string.diesel)
+            ).forEach { type ->
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -192,7 +196,7 @@ fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
         OutlinedTextField(
             value = gas_station,
             onValueChange = { gas_station = it },
-            label = { Text("Gas station (optional)") },
+            label = { Text(stringResource(R.string.gas_station_optional)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -221,7 +225,7 @@ fun NewRefuelScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Text("Save refuel")
+            Text(stringResource(R.string.save_refuel))
         }
     }
 }

@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -109,9 +110,9 @@ fun VehicleDashboard(uiState: HomeUiState) {
                     iconBackgroundColor = LightSurface,
                     textColor = LightOnBackground,
                     icon = R.drawable.speed_4_24px,
-                    label = "CONSUMPTION AVG.",
+                    label = stringResource(R.string.consumption_avg),
                     value = String.format("%.1f km/L", uiState.lastConsumption ?: 0.0),
-                    subtext = "Last refuel"
+                    subtext = stringResource(R.string.last_refuel)
                 )
                 DashboardCard(
                     modifier = Modifier.weight(1f),
@@ -119,7 +120,7 @@ fun VehicleDashboard(uiState: HomeUiState) {
                     iconBackgroundColor = MediumGray,
                     textColor = LightSurface,
                     icon = R.drawable.local_gas_station_24px,
-                    label = "LAST REFUEL",
+                    label = stringResource(R.string.last_refuel_alt),
                     value = String.format("R$ %.2f", uiState.lastRefuelValue ?: 0.0),
                     subtext = dateString
                 )
@@ -132,10 +133,10 @@ fun VehicleDashboard(uiState: HomeUiState) {
                 iconBackgroundColor = CarPurple,
                 textColor = LightSurface,
                 icon = R.drawable.payments_24px,
-                label = "TOTAL SPENT IN MONTH",
+                label = stringResource(R.string.total_spent_in_month),
                 value = String.format("R$ %.2f", uiState.totalSpentInMonth ?: 0.0),
                 subtext = String.format(
-                    "%d refuels - %d repairs",
+                    stringResource(R.string.d_refuels_d_repairs),
                     uiState.refuelMonthCount ?: 0,
                     uiState.repairMonthCount ?: 0
                 ),
@@ -144,7 +145,7 @@ fun VehicleDashboard(uiState: HomeUiState) {
         }
         item {
             Text(
-                text = "Recent activity",
+                text = stringResource(R.string.recent_activity),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -156,9 +157,11 @@ fun VehicleDashboard(uiState: HomeUiState) {
         }
         if (uiState.lastActivities.isEmpty()) {
             item {
-                Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(vertical = 24.dp).fillMaxWidth()) {
+                Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
+                    .padding(vertical = 24.dp)
+                    .fillMaxWidth()) {
                     Text(
-                        "No recent activities",
+                        stringResource(R.string.no_recent_activities),
                         color = MaterialTheme.colorScheme.secondary
                     )
                 }
@@ -212,7 +215,7 @@ fun VehicleHeaderCard(vehicle: VehicleEntity?, lastHodometer: Int?, color: Color
                     color = LightOnPrimary.copy(alpha = 0.8f)
                 )
                 Text(
-                    text = String.format("Last refuel: %d km", lastHodometer ?: 0),
+                    text = String.format(stringResource(R.string.last_refuel_d_km), lastHodometer ?: 0),
                     fontSize = 14.sp,
                     color = LightOnPrimary.copy(alpha = 0.8f)
                 )

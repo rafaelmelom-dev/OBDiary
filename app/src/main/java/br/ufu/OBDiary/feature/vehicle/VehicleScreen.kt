@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -125,7 +126,7 @@ fun VehicleCard(
                     Spacer(modifier = Modifier.size(10.dp))
                     if (isActive) {
                         Text(
-                            text = "Active",
+                            text = stringResource(R.string.active),
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier
                                 .background(
@@ -189,7 +190,7 @@ fun NewVehicleButton(onClick: () -> Unit) {
             Icon(
                 painter = painterResource(R.drawable.add_circle_24px), contentDescription = "Add"
             )
-            Text(text = "Add vehicle", color = MaterialTheme.colorScheme.onSurface)
+            Text(text = stringResource(R.string.add_a_vehicle), color = MaterialTheme.colorScheme.onSurface)
         }
     }
 }
@@ -214,7 +215,7 @@ fun VehicleScreen(
                     .fillMaxWidth()
                     .padding(vertical = 24.dp)
             ) {
-                Text("Não foi encontrado nenhum veículo")
+                Text(stringResource(R.string.no_vehicles_found))
             }
         } else {
 

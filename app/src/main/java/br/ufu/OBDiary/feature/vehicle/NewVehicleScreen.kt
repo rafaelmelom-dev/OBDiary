@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -86,7 +87,7 @@ fun NewVehicleScreen(
                     contentDescription = "Car",
                     modifier = Modifier.size(40.dp)
                 )
-                Text("Car", modifier = Modifier.padding(6.dp))
+                Text(stringResource(R.string.car), modifier = Modifier.padding(6.dp))
             }
 
             Column(
@@ -105,14 +106,14 @@ fun NewVehicleScreen(
                     contentDescription = "Motorcycle",
                     modifier = Modifier.size(40.dp)
                 )
-                Text("Motorcycle", modifier = Modifier.padding(6.dp))
+                Text(stringResource(R.string.motorcycle), modifier = Modifier.padding(6.dp))
             }
         }
 
         OutlinedTextField(
             value = model,
             onValueChange = { model = it },
-            label = { Text("Model") },
+            label = { Text(stringResource(R.string.model)) },
             singleLine = true,
             isError = modelFieldError,
             modifier = Modifier
@@ -125,7 +126,7 @@ fun NewVehicleScreen(
             onValueChange = { input ->
                 plate = input.filter { it.isLetterOrDigit() }.uppercase()
             },
-            label = { Text("Plate") },
+            label = { Text(stringResource(R.string.plate)) },
             singleLine = true,
             isError = plateError || plateFieldError,
             modifier = Modifier
@@ -137,7 +138,7 @@ fun NewVehicleScreen(
         OutlinedTextField(
             value = year,
             onValueChange = { year = it },
-            label = { Text("Year") },
+            label = { Text(stringResource(R.string.year)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             isError = yearFieldError,
@@ -147,7 +148,7 @@ fun NewVehicleScreen(
         )
 
         Text(
-            text = "Select Color",
+            text = stringResource(R.string.select_color),
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
         )
@@ -206,7 +207,7 @@ fun NewVehicleScreen(
                 .fillMaxWidth()
                 .padding(top = 12.dp)
         ) {
-            Text("Add vehicle")
+            Text(stringResource(R.string.add_vehicle))
         }
     }
 }
