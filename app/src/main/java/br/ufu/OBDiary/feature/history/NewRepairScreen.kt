@@ -185,7 +185,8 @@ fun NewRepairScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
 
         FlowRow(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             categories.forEach { cat ->
                 Box(
