@@ -39,8 +39,8 @@ class HistoryViewModel(
                 vehiclePreferences.activeVehicleId
             ) { list, activeId ->
                 HistoryUiState(
-                    refuelsList = list.find { it.vehicle.id == activeId }?.refuels?.sortedByDescending { it.date }
-                        ?.sortedByDescending { it.hodometer } ?: emptyList(),
+                    refuelsList = list.find { it.vehicle.id == activeId }?.refuels?.sortedByDescending { it.hodometer }
+                        ?.sortedByDescending { it.date } ?: emptyList(),
                     repairsList = list.find { it.vehicle.id == activeId }?.repairs?.sortedByDescending { it.date }
                         ?: emptyList(),
                     activeVehicleId = activeId,

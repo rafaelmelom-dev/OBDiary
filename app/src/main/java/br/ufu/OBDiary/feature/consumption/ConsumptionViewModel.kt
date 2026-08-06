@@ -47,8 +47,8 @@ class ConsumptionViewModel(
                 vehiclePreferences.activeVehicleId
             ) { list, activeId ->
                 val refuels =
-                    list.find { it.vehicle.id == activeId }?.refuels?.sortedByDescending { it.date }
-                        ?.sortedByDescending { it.hodometer }
+                    list.find { it.vehicle.id == activeId }?.refuels?.sortedByDescending { it.hodometer }
+                        ?.sortedByDescending { it.date }
                         ?: emptyList()
 
                 var consumptions = refuels.zipWithNext { first, second ->

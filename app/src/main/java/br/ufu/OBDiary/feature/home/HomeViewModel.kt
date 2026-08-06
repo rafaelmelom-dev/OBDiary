@@ -89,8 +89,8 @@ class HomeViewModel(
                     }
 
                 var totalSpentInMonth = 0.0
-                totalSpentInMonth += refuels?.sumOf { it.value_by_liter * it.liters } ?: 0.0
-                totalSpentInMonth += repairs?.sumOf { it.value } ?: 0.0
+                totalSpentInMonth += refuelsOfMonth?.sumOf { it.value_by_liter * it.liters } ?: 0.0
+                totalSpentInMonth += repairsOfMonth?.sumOf { it.value } ?: 0.0
 
                 val refuelsActivity = refuels?.map {
                     Activity(
