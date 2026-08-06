@@ -51,7 +51,7 @@ fun HomeScreen(homeViewModel: HomeViewModel, onAddRefuel: () -> Unit) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { }
+                onClick = { onAddRefuel() }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.add_24px),
@@ -157,9 +157,11 @@ fun VehicleDashboard(uiState: HomeUiState) {
         }
         if (uiState.lastActivities.isEmpty()) {
             item {
-                Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
-                    .padding(vertical = 24.dp)
-                    .fillMaxWidth()) {
+                Row(
+                    horizontalArrangement = Arrangement.Center, modifier = Modifier
+                        .padding(vertical = 24.dp)
+                        .fillMaxWidth()
+                ) {
                     Text(
                         stringResource(R.string.no_recent_activities),
                         color = MaterialTheme.colorScheme.secondary
@@ -215,7 +217,10 @@ fun VehicleHeaderCard(vehicle: VehicleEntity?, lastHodometer: Int?, color: Color
                     color = LightOnPrimary.copy(alpha = 0.8f)
                 )
                 Text(
-                    text = String.format(stringResource(R.string.last_refuel_d_km), lastHodometer ?: 0),
+                    text = String.format(
+                        stringResource(R.string.last_refuel_d_km),
+                        lastHodometer ?: 0
+                    ),
                     fontSize = 14.sp,
                     color = LightOnPrimary.copy(alpha = 0.8f)
                 )

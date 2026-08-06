@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -45,14 +46,14 @@ fun ConsumptionScreen(consumptionViewModel: ConsumptionViewModel) {
                     label = stringResource(R.string.general_avg),
                     value = String.format("%.1f", uiState.value.average ?: 0.0),
                     unit = "km/L",
-                    backgroundColor = Color(0xFFD1E4FF), // Light blue
+                    backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                     modifier = Modifier.weight(1f)
                 )
                 SummaryCard(
                     label = stringResource(R.string.best_avg),
                     value = String.format("%.1f", uiState.value.best ?: 0.0),
                     unit = "km/L",
-                    backgroundColor = Color(0xFFF0F2F5), // Light gray
+                    backgroundColor = MaterialTheme.colorScheme.surface,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -101,18 +102,18 @@ fun SummaryCard(
                 text = label,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.secondary
             )
             Text(
                 text = value,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
             Text(
                 text = unit,
                 fontSize = 12.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.secondary
             )
         }
     }
@@ -127,7 +128,7 @@ fun RefuelItem(consumption: ConsumptionEntry) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -137,12 +138,12 @@ fun RefuelItem(consumption: ConsumptionEntry) {
                 text = dateString,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
             Text(
                 text = stringResource(R.string.refuel, consumption.refuelNumber),
                 fontSize = 14.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.secondary
             )
         }
 
