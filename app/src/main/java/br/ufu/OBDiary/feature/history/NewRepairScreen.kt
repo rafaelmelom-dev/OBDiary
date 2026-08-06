@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import br.ufu.OBDiary.R
 import br.ufu.OBDiary.ui.theme.CarBlue
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.ui.res.stringResource
 import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.util.Date
@@ -54,29 +55,33 @@ fun NewRepairScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
     sdf.timeZone = TimeZone.getTimeZone(ZoneId.systemDefault())
     val today = sdf.format(Date())
 
+    val type_resource = stringResource(R.string.oil_change)
+    val category_resource = stringResource(R.string.oil_change)
+
     var date by remember { mutableStateOf(today) }
     var showDatePicker by remember { mutableStateOf(false) }
-    var type by remember { mutableStateOf("Oil change") }
+    var type by remember { mutableStateOf(type_resource) }
     var description by remember { mutableStateOf("") }
-    var category by remember { mutableStateOf("Preventive") }
+    var category by remember { mutableStateOf(category_resource) }
     var workshop by remember { mutableStateOf("") }
     var workshopFieldError by remember { mutableStateOf(false) }
     var value by remember { mutableStateOf("") }
     var valueFieldError by remember { mutableStateOf(false) }
 
     val serviceTypes = listOf(
-        "Oil change",
-        "Alignment and balancing",
-        "Brake pad",
-        "Tire",
-        "General inspection",
-        "Suspension",
-        "Engine",
-        "Electrical",
-        "Air conditioning",
-        "Other"
+        stringResource(R.string.oil_change),
+        stringResource(R.string.alignment_and_balancing),
+        stringResource(R.string.brake_pad),
+        stringResource(R.string.tire),
+        stringResource(R.string.general_inspection),
+        stringResource(R.string.suspension),
+        stringResource(R.string.engine),
+        stringResource(R.string.electrical),
+        stringResource(R.string.air_conditioning),
+        stringResource(R.string.other)
     )
-    val categories = listOf("Preventive", "Corrective", "Aesthetic", "Other")
+    val categories = listOf(stringResource(R.string.preventive),
+        stringResource(R.string.corrective), stringResource(R.string.aesthetic), stringResource(R.string.other))
 
     val datePickerState = rememberDatePickerState()
 
@@ -87,17 +92,17 @@ fun NewRepairScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
                 Button(onClick = {
                     datePickerState.selectedDateMillis?.let { millis ->
                         val sdf = SimpleDateFormat("dd / MM / yyyy", Locale.getDefault())
-                        sdf.timeZone = TimeZone.getTimeZone("UTC")
+                        sdf.timeZone = TimeZone.getTimeZone(ZoneId.systemDefault())
                         date = sdf.format(Date(millis))
                     }
                     showDatePicker = false
                 }) {
-                    Text("OK")
+                    Text(stringResource(R.string.ok))
                 }
             },
             dismissButton = {
                 Button(onClick = { showDatePicker = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         ) {
@@ -135,7 +140,7 @@ fun NewRepairScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
         }
 
         Text(
-            text = "Service type",
+            text = stringResource(R.string.service_type),
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.padding(top = 8.dp)
         )
@@ -168,12 +173,12 @@ fun NewRepairScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
         OutlinedTextField(
             value = description,
             onValueChange = { description = it },
-            label = { Text("Description") },
+            label = { Text(stringResource(R.string.description)) },
             modifier = Modifier.fillMaxWidth()
         )
 
         Text(
-            text = "Category",
+            text = stringResource(R.string.category),
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.padding(top = 8.dp)
         )
@@ -204,7 +209,7 @@ fun NewRepairScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
         OutlinedTextField(
             value = workshop,
             onValueChange = { workshop = it },
-            label = { Text("Workshop") },
+            label = { Text(stringResource(R.string.workshop)) },
             isError = workshopFieldError,
             modifier = Modifier.fillMaxWidth()
         )
@@ -212,7 +217,7 @@ fun NewRepairScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
         OutlinedTextField(
             value = value,
             onValueChange = { value = it },
-            label = { Text("Value (R$)") },
+            label = { Text(stringResource(R.string.value_r)) },
             isError = valueFieldError,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth()
@@ -242,7 +247,7 @@ fun NewRepairScreen(historyViewModel: HistoryViewModel, onBack: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Text("Save repair")
+            Text(stringResource(R.string.save_repair))
         }
     }
 }

@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -97,7 +98,7 @@ fun HistoryScreen(
                                 painter = painterResource(id = R.drawable.local_gas_station_24px),
                                 contentDescription = "Refuel"
                             )
-                            Text(text = "Refuels")
+                            Text(text = stringResource(R.string.refuels))
                         }
                     }
                 )
@@ -112,7 +113,7 @@ fun HistoryScreen(
                                 painter = painterResource(id = R.drawable.build_24px),
                                 contentDescription = "Repair"
                             )
-                            Text(text = "Repairs")
+                            Text(text = stringResource(R.string.repairs))
                         }
                     }
                 )
@@ -125,7 +126,7 @@ fun HistoryScreen(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("First, select a vehicle")
+                            Text(stringResource(R.string.first_select_a_vehicle))
                         }
                     } else {
                         RefuelHistoryList(
@@ -141,7 +142,7 @@ fun HistoryScreen(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("First, select a vehicle")
+                            Text(stringResource(R.string.first_select_a_vehicle))
                         }
                     } else {
                         RepairHistoryList(
@@ -174,13 +175,13 @@ fun RefuelHistoryList(refuels: List<RefuelingEntity>, onDelete: (Int) -> Unit) {
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 Text(
-                    text = "No refuel found",
+                    text = stringResource(R.string.no_refuel_found),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "Tap the + icon to add",
+                    text = stringResource(R.string.tap_the_plus_icon_to_add),
                     fontSize = 14.sp,
                     color = MediumGray
                 )
@@ -317,13 +318,13 @@ fun RepairHistoryList(repairs: List<RepairEntity>, onDelete: (Int) -> Unit) {
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 Text(
-                    text = "No repair found",
+                    text = stringResource(R.string.no_repair_found),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "Tap the + icon to add",
+                    text = stringResource(R.string.tap_the_plus_icon_to_add),
                     fontSize = 14.sp,
                     color = MediumGray
                 )

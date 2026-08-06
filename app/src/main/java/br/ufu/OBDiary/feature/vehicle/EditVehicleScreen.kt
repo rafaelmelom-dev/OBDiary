@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.ufu.OBDiary.R
+import br.ufu.OBDiary.core.datasource.VehicleEntity
 import br.ufu.OBDiary.ui.theme.CarBlue
 import br.ufu.OBDiary.ui.theme.CarCyan
 import br.ufu.OBDiary.ui.theme.CarGreen
@@ -40,16 +41,17 @@ import br.ufu.OBDiary.ui.theme.CarRed
 import br.ufu.OBDiary.ui.theme.CarYellow
 
 @Composable
-fun NewVehicleScreen(
+fun EditVehicleScreen(
     onBack: () -> Unit,
-    vehicleViewModel: VehicleViewModel = viewModel()
+    vehicleViewModel: VehicleViewModel = viewModel(),
+    oldVehicle: VehicleEntity
 ) {
-    var isCar by remember { mutableStateOf(true) }
-    var isMotorcycle by remember { mutableStateOf(false) }
-    var model by remember { mutableStateOf("") }
-    var plate by remember { mutableStateOf("") }
-    var year by remember { mutableStateOf("") }
-    var selectedColor by remember { mutableStateOf(CarBlue) }
+    var isCar by remember { mutableStateOf(oldVehicle.type == "car") }
+    var isMotorcycle by remember { mutableStateOf(oldVehicle.type == "motorcycle") }
+    var model by remember { mutableStateOf(oldVehicle.model) }
+    var plate by remember { mutableStateOf(oldVehicle.plate) }
+    var year by remember { mutableStateOf(oldVehicle.year.toString()) }
+    var selectedColor by remember { mutableStateOf(oldVehicle.color) }
     var plateError by remember { mutableStateOf(false) }
     var modelFieldError by remember { mutableStateOf(false) }
     var plateFieldError by remember { mutableStateOf(false) }
@@ -185,21 +187,14 @@ fun NewVehicleScreen(
 
                 if (areFieldsFilled && isValidPlate) {
                     val vehicleYear = year.toIntOrNull() ?: 0
-                    if (isCar) {
-                        vehicleViewModel.addCar(
-                            model = model,
-                            plate = plate,
-                            year = vehicleYear,
-                            color = selectedColor
-                        )
-                    } else if (isMotorcycle) {
-                        vehicleViewModel.addMotorcycle(
-                            model = model,
-                            plate = plate,
-                            year = vehicleYear,
-                            color = selectedColor
-                        )
-                    }
+                    vehicleViewModel.updateVehicle(
+                        id = oldVehicle.id,
+                        type = if (isCar) "car" else "motorcycle",
+                        model = model,
+                        plate = plate,
+                        year = vehicleYear,
+                        color = selectedColor
+                    )
                     onBack()
                 }
             },
@@ -207,7 +202,7 @@ fun NewVehicleScreen(
                 .fillMaxWidth()
                 .padding(top = 12.dp)
         ) {
-            Text(stringResource(R.string.add_vehicle))
+            Text(stringResource(R.string.update_vehicle))
         }
     }
 }

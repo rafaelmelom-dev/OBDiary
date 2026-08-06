@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -57,6 +58,7 @@ fun VehicleCard(
     isActive: Boolean = false,
     onSetActive: () -> Unit,
     onDelete: () -> Unit,
+    onEdit: (VehicleEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -125,7 +127,7 @@ fun VehicleCard(
                     Spacer(modifier = Modifier.size(10.dp))
                     if (isActive) {
                         Text(
-                            text = "Active",
+                            text = stringResource(R.string.active),
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier
                                 .background(
@@ -159,10 +161,19 @@ fun VehicleCard(
         ) {
             Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxHeight()) {
                 Icon(
+                    painter = painterResource(R.drawable.edit_24px),
+                    contentDescription = "Edit",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { onEdit(vehicle) }
+                )
+                Icon(
                     painter = painterResource(R.drawable.delete_24px),
                     contentDescription = "Delete",
                     tint = MaterialTheme.colorScheme.error,
                     modifier = Modifier
+                        .padding(top = 16.dp)
                         .size(24.dp)
                         .clickable { onDelete() }
                 )
@@ -189,14 +200,17 @@ fun NewVehicleButton(onClick: () -> Unit) {
             Icon(
                 painter = painterResource(R.drawable.add_circle_24px), contentDescription = "Add"
             )
-            Text(text = "Add vehicle", color = MaterialTheme.colorScheme.onSurface)
+            Text(
+                text = stringResource(R.string.add_a_vehicle),
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
     }
 }
 
 @Composable
 fun VehicleScreen(
-    onAddVehicle: () -> Unit, vehicleViewModel: VehicleViewModel = viewModel()
+    onAddVehicle: () -> Unit, onEdit: (VehicleEntity) -> Unit, vehicleViewModel: VehicleViewModel = viewModel()
 ) {
     val uiState = vehicleViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -214,7 +228,7 @@ fun VehicleScreen(
                     .fillMaxWidth()
                     .padding(vertical = 24.dp)
             ) {
-                Text("Não foi encontrado nenhum veículo")
+                Text(stringResource(R.string.no_vehicles_found))
             }
         } else {
 
@@ -223,7 +237,8 @@ fun VehicleScreen(
                     vehicle = vehicleWithRefuelAndRepair.vehicle,
                     isActive = vehicleWithRefuelAndRepair.vehicle.id == uiState.value.activeVehicleId,
                     onSetActive = { vehicleViewModel.setActiveVehicle(vehicleWithRefuelAndRepair.vehicle.id) },
-                    onDelete = { vehicleViewModel.removeVehicleById(vehicleWithRefuelAndRepair.vehicle.id) }
+                    onDelete = { vehicleViewModel.removeVehicleById(vehicleWithRefuelAndRepair.vehicle.id) },
+                    onEdit = { vehicle -> onEdit(vehicle) }
                 )
             }
 
