@@ -74,4 +74,6 @@
     <string name="no_vehicles_found">No vehicles found</string>
     <string name="add_a_vehicle">Add vehicle</string>
     <string name="no_consumptions_found">No consumptions found</string>
+    <string name="update_vehicle">Update vehicle</string>
+    <string name="editVehicleTitle">Edit vehicle</string>
 </resources>

@@ -67,12 +67,28 @@ class VehicleViewModel(
         }
     }
 
+
     fun removeVehicleById(id: Int) {
         viewModelScope.launch {
             obdiaryRepository.deleteVehicleById(id)
             if (vehiclePreferences.activeVehicleId.first() == id) {
                 vehiclePreferences.clearActiveVehicle()
             }
+        }
+    }
+
+    fun updateVehicle(id: Int, model: String, plate: String, year: Int, color: Color, type: String) {
+        viewModelScope.launch {
+            obdiaryRepository.updateVehicle(
+                VehicleEntity(
+                    id = id,
+                    type = type,
+                    model = model,
+                    plate = plate,
+                    year = year,
+                    color = color
+                )
+            )
         }
     }
 

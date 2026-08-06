@@ -24,12 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import br.ufu.OBDiary.R
+import br.ufu.OBDiary.core.datasource.VehicleEntity
 import br.ufu.OBDiary.feature.consumption.ConsumptionScreen
 import br.ufu.OBDiary.feature.history.HistoryScreen
 import br.ufu.OBDiary.feature.history.NewRefuelScreen
 import br.ufu.OBDiary.feature.history.NewRepairScreen
 import br.ufu.OBDiary.feature.home.HomeScreen
 import br.ufu.OBDiary.feature.obd.ObdSimulatorScreen
+import br.ufu.OBDiary.feature.vehicle.EditVehicleScreen
 import br.ufu.OBDiary.feature.vehicle.NewVehicleScreen
 import br.ufu.OBDiary.feature.vehicle.VehicleScreen
 import kotlinx.serialization.Serializable
@@ -41,6 +43,7 @@ sealed class Destination(val titleRes: Int) {
     object Consumption : Destination(R.string.consumptionTitle)
     object Vehicles : Destination(R.string.myVehiclesTitle)
     object NewVehicle : Destination(R.string.newVehicleTitle)
+    data class EditVehicle(val oldVehicle: VehicleEntity) : Destination(R.string.editVehicleTitle)
     object NewRefuel : Destination(R.string.newRefuelTitle)
     object NewRepair : Destination(R.string.newRepairTitle)
 }
@@ -90,7 +93,8 @@ fun OBDiaryApp(context: Context) {
                 is Destination.Vehicles -> NavEntry<Destination>(destination) {
                     VehicleScreen(
                         vehicleViewModel = appContainer.vehicleViewModel,
-                        onAddVehicle = { backStack.add(Destination.NewVehicle) })
+                        onAddVehicle = { backStack.add(Destination.NewVehicle) },
+                        onEdit = { vehicle -> backStack.add(Destination.EditVehicle(vehicle)) })
                 }
 
                 is Destination.NewVehicle -> NavEntry<Destination>(destination) {
@@ -109,6 +113,16 @@ fun OBDiaryApp(context: Context) {
                     NewRepairScreen(
                         historyViewModel = appContainer.historyViewModel,
                         onBack = { backStack.removeLastOrNull() })
+                }
+
+                is Destination.EditVehicle -> NavEntry<Destination>(destination) { dest ->
+                    val editDestination = dest as Destination.EditVehicle
+
+                    EditVehicleScreen(
+                        onBack = { backStack.removeLastOrNull() },
+                        vehicleViewModel = appContainer.vehicleViewModel,
+                        oldVehicle = editDestination.oldVehicle
+                    )
                 }
             }
         }
@@ -207,18 +221,16 @@ fun OBDiaryBottomBar(currentDestination: Destination, onTabSelected: (Destinatio
 fun OBDiaryTopBar(currentDestination: Destination, onBack: () -> Unit) {
     TopAppBar(
         title = {
-            if (currentDestination is Destination.NewVehicle || currentDestination is Destination.NewRefuel || currentDestination is Destination.NewRepair) {
+            if (currentDestination is Destination.NewVehicle || currentDestination is Destination.NewRefuel || currentDestination is Destination.NewRepair || currentDestination is Destination.EditVehicle) {
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     Icon(
                         painter = painterResource(R.drawable.keyboard_backspace_24px),
                         contentDescription = "Back",
-                        modifier = Modifier.clickable { onBack() }
-                    )
+                        modifier = Modifier.clickable { onBack() })
                     Text(text = stringResource(currentDestination.titleRes))
                 }
             } else {
                 Text(text = stringResource(currentDestination.titleRes))
             }
-        }
-    )
+        })
 }

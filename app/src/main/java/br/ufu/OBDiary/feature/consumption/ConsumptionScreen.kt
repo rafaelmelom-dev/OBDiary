@@ -70,7 +70,7 @@ fun ConsumptionScreen(consumptionViewModel: ConsumptionViewModel) {
 
         if (uiState.value.consumptions.isEmpty()) {
             item {
-                Row (horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(24.dp)) {
+                Row (horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(24.dp).fillMaxWidth()) {
                     Text(stringResource(R.string.no_consumptions_found))
                 }
             }
