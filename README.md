@@ -4,7 +4,7 @@ Aplicação Android para registro e gestão de diários, desenvolvida para propo
 
 ## Demonstração
 
-<video controls src="https://github.com/rafaelmelom-dev/OBDiary/blob/main/Screencast%20From%202026-08-11%2016-45-54.mp4">
+<video controls src="https://github.com/rafaelmelom-dev/OBDiary/blob/main/Screencast%20From%202026-08-11%2016-45-54.mp4"></video>
 
 ## Funcionalidades
 
