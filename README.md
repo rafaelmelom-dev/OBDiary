@@ -2,6 +2,10 @@
 
 Aplicação Android para registro e gestão de diários, desenvolvida para proporcionar a organização de anotações pessoais em dispositivos móveis.
 
+## Demonstração
+
+<video controls src="https://github.com/rafaelmelom-dev/OBDiary/blob/main/Screencast%20From%202026-08-11%2016-45-54.mp4">
+
 ## Funcionalidades
 
 - Registro de entradas de diário.
