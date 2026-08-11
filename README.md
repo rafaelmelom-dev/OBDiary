@@ -25,7 +25,9 @@ OBDiary/
 - Build Tool: Gradle
 # Instalação e Execução
 1. Clone o repositório:
+```text
 git clone https://github.com/rafaelmelom-dev/OBDiary.git
 cd OBDiary
-2. Abra o projeto no Android Studio.
-3. Sincronize os arquivos do Gradle e execute a aplicação em um emulador ou dispositivo Android.
+```
+3. Abra o projeto no Android Studio.
+4. Sincronize os arquivos do Gradle e execute a aplicação em um emulador ou dispositivo Android.
