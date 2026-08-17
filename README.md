@@ -4,7 +4,7 @@ Aplicação Android para registro e gestão de diários, desenvolvida para propo
 
 ## Demonstração
 
-<video controls src="https://github.com/user-attachments/assets/ed419803-7f2d-4f1a-a9d4-6296fbdfa0e3"></video>
+<video controls src="https://github.com/user-attachments/assets/84442704-1398-400a-9226-2599e5182f00"></video>
 
 ## Funcionalidades
 
